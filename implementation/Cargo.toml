@@ -1,0 +1,10 @@
+# implementation/Cargo.toml (your jepa crate's Cargo.toml)
+[package]
+name = "hrm"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Assuming `numrs` is a sibling directory to `implementation`
+numrs = { path = "./../lib/numrs" }
+rand = "0.8.4"

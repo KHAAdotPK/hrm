@@ -1,0 +1,13 @@
+# Cargo.toml (Of wrapper around JEPA for images implementation)
+
+[package]
+name = "hrm-wrapper" # Hierarchical Representation Model
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Crates
+hrm = { path = "./implementation" } # Path to your jepa crate
+numrs = { path = "./lib/numrs" } # Path to your numrs crate
+argsv = { path = "./lib/argsv-rust/lib/rust/argsv/" }
+
