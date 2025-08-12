@@ -9,7 +9,7 @@
 
 use argsv::{common_argc, find_arg, help, help_line, process_argument, start, stop, COMMANDLINES, PCLA};
 use numrs::{dimensions::Dimensions, collective::Collective, num::Numrs};
-use hrm::{constants, utility::generate_hrm_training_data};
+use hrm::{constants, utility::generate_hrm_training_data, hrm::hrm_model, parameter::Parameter};
 
 fn main() {
 
@@ -93,4 +93,27 @@ fn main() {
             }                        
         }
     }
+
+    //let mut parameters: Vec<parameter> = Vec::new();
+    
+    let mut parameters = Parameter::new(constants::PARAMETER_LIST_EMPTY_MARKER.to_string());    
+    let model = hrm_model::new(constants::d_x, constants::d_h, constants::d_l, constants::d_y);
+    parameters.add("W_xh".to_string());
+    parameters.add("W_hh".to_string());
+    parameters.add("W_lh".to_string());
+
+    parameters.traverse();
+
+    let link = parameters.find("W_lh".to_string());
+
+    let binding = link.unwrap();
+    let binding = binding.borrow();
+    let name = binding.get_name();
+    
+    println!("Name: {}", name);
+
+    /*if let Some(link) = link {
+
+        println!("Link found");
+    }*/
 } 
