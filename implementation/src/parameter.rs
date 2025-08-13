@@ -10,7 +10,7 @@ use crate::constants;
 pub struct Parameter {
     
     name: String,
-    //data: Option<Collective<f64>>,
+    data: Option<Collective<f64>>,
     next: Option<Rc<RefCell<Parameter>>>,
     prev: Option<Rc<RefCell<Parameter>>>    
 }
@@ -20,9 +20,10 @@ type ParameterNode = Rc<RefCell<Parameter>>;
 
 impl Parameter {
         
-    pub fn new(name: String) -> Parameter {
+    pub fn new(name: String, data: Option<Collective<f64>>) -> Parameter {
         Parameter {
-            name,
+            name: name,
+            data: data,
             next: None,
             prev: None
         }
@@ -34,7 +35,7 @@ impl Parameter {
 
     // Create a new node wrapped in Rc<RefCell<>>
     fn new_node(name: String) -> ParameterNode {
-        Rc::new(RefCell::new(Parameter::new(name)))
+        Rc::new(RefCell::new(Parameter::new(name, None)))
     }
 
     pub fn add (&mut self, name: String) {
@@ -56,6 +57,7 @@ impl Parameter {
 
                 let self_rc = Rc::new(RefCell::new(Parameter {
                     name: self.name.clone(),
+                    data: self.data.clone(),
                     next: Some(Rc::clone(&new_node)),
                     prev: None
                 }));
@@ -101,6 +103,7 @@ impl Parameter {
             // Create a copy of self and return it wrapped in Rc<RefCell<>>
             let self_copy = Parameter {
                 name: self.name.clone(),
+                data: self.data.clone(),
                 next: self.next.clone(), // This clones the Rc, not the data
                 prev: self.prev.clone(), // This clones the Rc, not the data
             };

@@ -96,7 +96,7 @@ fn main() {
 
     //let mut parameters: Vec<parameter> = Vec::new();
     
-    let mut parameters = Parameter::new(constants::PARAMETER_LIST_EMPTY_MARKER.to_string());    
+    let mut parameters = Parameter::new(constants::PARAMETER_LIST_EMPTY_MARKER.to_string(), None);    
     let model = hrm_model::new(constants::d_x, constants::d_h, constants::d_l, constants::d_y);
     parameters.add("W_xh".to_string());
     parameters.add("W_hh".to_string());
@@ -110,10 +110,5 @@ fn main() {
     let binding = binding.borrow();
     let name = binding.get_name();
     
-    println!("Name: {}", name);
-
-    /*if let Some(link) = link {
-
-        println!("Link found");
-    }*/
+    println!("Name: {}", name);    
 } 
