@@ -33,18 +33,23 @@ impl Parameter {
         &self.name
     }
 
-    // Create a new node wrapped in Rc<RefCell<>>
-    fn new_node(name: String) -> ParameterNode {
-        Rc::new(RefCell::new(Parameter::new(name, None)))
+    pub fn get_data(&self) -> Option<Collective<f64>> {
+        self.data.clone()
     }
 
-    pub fn add (&mut self, name: String) {
+    // Create a new node wrapped in Rc<RefCell<>>
+    fn new_node(name: String, data: Option<Collective<f64>>) -> ParameterNode {
+        Rc::new(RefCell::new(Parameter::new(name, data)))
+    }
+
+    pub fn add (&mut self, name: String, data: Option<Collective<f64>>) {
         
         if self.name == constants::PARAMETER_LIST_EMPTY_MARKER { // Empty list
             
             //println!("Empty list");
 
             self.name = name;
+            self.data = data.clone();
         }
         else { // Non-empty list and it can be a doubly linked list with just one node
             
@@ -53,7 +58,7 @@ impl Parameter {
                 
                 //println!("First real node");
 
-                let new_node = Self::new_node(name);
+                let new_node = Self::new_node(name, data);
 
                 let self_rc = Rc::new(RefCell::new(Parameter {
                     name: self.name.clone(),
@@ -61,7 +66,7 @@ impl Parameter {
                     next: Some(Rc::clone(&new_node)),
                     prev: None
                 }));
-
+                
                 // Set up the bidirectional link
                 new_node.borrow_mut().prev = Some(Rc::clone(&self_rc));
                 
@@ -82,7 +87,7 @@ impl Parameter {
                 }
 
                 // Create new node and link it
-                let new_node = Self::new_node(name);
+                let new_node = Self::new_node(name, data);
                 new_node.borrow_mut().prev = Some(Rc::clone(&current));
                 current.borrow_mut().next = Some(new_node);
 

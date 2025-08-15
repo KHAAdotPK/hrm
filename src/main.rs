@@ -89,7 +89,7 @@ fn main() {
             
             for &value in data.iter() {
 
-                println!("{}", value);
+                //println!("{}", value);
             }                        
         }
     }
@@ -98,17 +98,33 @@ fn main() {
     
     let mut parameters = Parameter::new(constants::PARAMETER_LIST_EMPTY_MARKER.to_string(), None);    
     let model = hrm_model::new(constants::d_x, constants::d_h, constants::d_l, constants::d_y);
-    parameters.add("W_xh".to_string());
-    parameters.add("W_hh".to_string());
-    parameters.add("W_lh".to_string());
+    parameters.add("W_xh".to_string(), Numrs::randn::<f64>(Dimensions::new(constants::d_x, constants::d_h)));
+    parameters.add("W_hh".to_string(), None);
+    parameters.add("W_lh".to_string(), None);
 
     parameters.traverse();
 
-    let link = parameters.find("W_lh".to_string());
+    let link = parameters.find("W_xh".to_string());
 
     let binding = link.unwrap();
     let binding = binding.borrow();
     let name = binding.get_name();
+
+    let data = binding.get_data();
+    if let Some(collective) = data {
+
+        if let Some(data) = &collective.data {
+
+            let shape = collective.shape.unwrap();
+
+            println!("Shape: {}", shape);
+            
+            for &value in data.iter() {
+
+                println!("{}", value);
+            }                        
+        }
+    }
     
     println!("Name: {}", name);    
 } 
