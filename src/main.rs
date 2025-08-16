@@ -93,18 +93,48 @@ fn main() {
             }                        
         }
     }
-
-    //let mut parameters: Vec<parameter> = Vec::new();
-    
-    let mut parameters = Parameter::new(constants::PARAMETER_LIST_EMPTY_MARKER.to_string(), None);    
+        
     let model = hrm_model::new(constants::d_x, constants::d_h, constants::d_l, constants::d_y);
-    parameters.add("W_xh".to_string(), Numrs::randn::<f64>(Dimensions::new(constants::d_x, constants::d_h)));
+
+    let mut parameters = Parameter::new("W_xh".to_string(), Numrs::randn::<f64>(Dimensions::new(constants::d_x, constants::d_h)));    
     parameters.add("W_hh".to_string(), None);
     parameters.add("W_lh".to_string(), None);
 
-    parameters.traverse();
+    // Forward iteration
+    for node in parameters.iter() {
 
-    let link = parameters.find("W_xh".to_string());
+        println!("Forward Node: {}", node.borrow().get_name());
+
+        if node.borrow().get_data().is_some() {
+
+            let shape = node.borrow().get_data().unwrap().shape.unwrap();
+            
+            println!("Shape: {}", shape);
+        }
+    }
+
+    let mut iter = parameters.iter();
+    while let Some(node) = iter.next_back() {
+
+        println!("Reverse: {}", node.borrow().get_name());
+
+        if node.borrow().get_data().is_some() {
+
+            let shape = node.borrow().get_data().unwrap().shape.unwrap();
+            
+            println!("Shape: {}", shape);
+        }
+    }
+
+let mut iter = parameters.iter();
+println!("Zig-Zag:");
+println!("{}", iter.next().unwrap().borrow().get_name());      // "head"
+println!("{}", iter.next_back().unwrap().borrow().get_name()); // "tail"
+println!("{}", iter.next().unwrap().borrow().get_name());      // "middle"
+    
+    //parameters.traverse();
+
+    let link = parameters.find("W_xh");
 
     let binding = link.unwrap();
     let binding = binding.borrow();
@@ -117,11 +147,16 @@ fn main() {
 
             let shape = collective.shape.unwrap();
 
-            println!("Shape: {}", shape);
+            //let columns = shape.columns();
+            //let rows = shape.rows();
+
             
+
+            println!("Shape: {}", shape);
+                        
             for &value in data.iter() {
 
-                println!("{}", value);
+                //println!("{}", value);
             }                        
         }
     }
