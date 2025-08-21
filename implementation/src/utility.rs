@@ -81,13 +81,13 @@ pub fn generate_hrm_training_data<E>(x_train: &mut Option<Collective<E>>, y_trai
         *x_train = Numrs::randn::<E>(*collective.shape.clone().unwrap());
     }*/
 
-    *x_train = Numrs::randn::<E>(dim1.clone());
-    *x_val = Numrs::randn::<E>(dim1.clone());
+    *x_train = Some(Numrs::randn::<E>(dim1.clone()));
+    *x_val = Some(Numrs::randn::<E>(dim1.clone()));
 
     // y = torch.randint(0, d_y, (num_samples, seq_len))  # Random class labels
     // 2D target tensors
     dim1 = Dimensions::new(constants::seq_len, constants::batch_size);
 
-    *y_train = Numrs::randint (0, constants::d_y, dim1.clone());
-    *y_val = Numrs::randint (0, constants::d_y, dim1.clone());
+    *y_train = Some(Numrs::randint (0, constants::d_y, dim1.clone()));
+    *y_val = Some(Numrs::randint (0, constants::d_y, dim1.clone()));
 }

@@ -81,22 +81,27 @@ fn main() {
 
     if let Some(collective) = y_val {
 
-        if let Some(data) = &collective.data {
+        if collective.shape.as_ref().unwrap().get_n() != 0 {
+                
+            if let Some(data) = &collective.data {
 
-            let shape = collective.shape.unwrap();
+                let shape = collective.shape.unwrap();
 
-            println!("Shape: {}", shape);
+                println!("Shape: {}", shape);
             
-            for &value in data.iter() {
+                for &value in data.iter() {
 
-                //println!("{}", value);
-            }                        
-        }
+                    //println!("{}", value);
+                }                        
+            }
+        }   
     }
-        
-    let model = hrm_model::new(constants::d_x, constants::d_h, constants::d_l, constants::d_y);
+            
+    let mut parameters = Parameter::new("W_xh".to_string(), Some(Numrs::randn::<f64>(Dimensions::new(constants::d_x, constants::d_h))));    
+    
+    let model = hrm_model::new(constants::d_x, constants::d_h, constants::d_l, constants::d_y, &mut parameters);
 
-    let mut parameters = Parameter::new("W_xh".to_string(), Numrs::randn::<f64>(Dimensions::new(constants::d_x, constants::d_h)));    
+    
     parameters.add("W_hh".to_string(), None);
     parameters.add("W_lh".to_string(), None);
 
